@@ -169,7 +169,7 @@ maxValueSound:
 LED:
 	LDI R20, 24
 	LDI R21, 0
-	LDI R22, 255
+	LDI R22, 185
 	LDI R23, 8
 
 	CP COUNT, R20
@@ -185,21 +185,24 @@ LED:
 		SUB R22, COUNT
 		DEC R23
 		BRNE decrease
-	
+
 	LEDLoop1:
 		SBI PORTC, 7
+		RCALL LEDDelay
 		RCALL LEDDelay
 
 		SBIC PIND, 4
 		RET
 
-		CBI PORTC, 7
-
 		SBIC PINF, 6
 		RET
+
 		CBI PORTC, 7
 		RCALL LEDDelay
+		RCALL LEDDelay
 
+		NOP
+		NOP
 		RJMP LEDLoop1
 
 	constant:
@@ -211,6 +214,9 @@ LED:
 		RET
 	
 LEDDelay:
+	MOV R24, R20
+	MOV R25, R22
+
 	LEDDelayLoop1:
 			LEDDelayLoop2:
 				LDI R23, 5
@@ -221,19 +227,13 @@ LEDDelay:
 					
 					NOP ; To extend delay
 					NOP ; To extend delay
-					NOP
-					NOP
-					NOP
-					NOP
-					NOP
-					NOP
 
 					SBIC PINF, 6
 					RET
 					BRNE LEDDelayLoop3
-				DEC R22
+				DEC R25
 				BRNE LEDDelayLoop2
-		DEC R20
+		DEC R24
 		BRNE LEDDelayLoop1
 	RET
 
